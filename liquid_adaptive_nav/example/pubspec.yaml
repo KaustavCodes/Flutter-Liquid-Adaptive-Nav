@@ -1,0 +1,28 @@
+name: liquid_adaptive_nav_example
+description: "Demonstrates liquid_adaptive_nav across iOS, iPhone Duo, macOS sidebar, Android Material NavigationBar, and Light/Dark themes."
+publish_to: 'none'
+
+environment:
+  sdk: ^3.13.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+  liquid_adaptive_nav:
+    path: ../
+  cupertino_icons: ^1.0.8
+
+# TEMPORARY local override while display_posture_detector 0.0.4 is unreleased on pub.dev.
+dependency_overrides:
+  display_posture_detector:
+    path: ../../../Flutter-Display-Posture-Detector-Plugin/display_posture_detector
+
+dev_dependencies:
+  integration_test:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
