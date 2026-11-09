@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'liquid_adaptive_nav'
-  s.version          = '0.0.2'
+  s.version          = '0.0.3'
   s.summary          = 'Adaptive liquid-glass navigation bar, Duo side-strip dock, and desktop sidebar for Flutter.'
   s.description      = <<-DESC
 A Flutter plugin providing adaptive Apple Liquid Glass pill navigation capsules (native iOS 26+ UIGlassEffect with UIBlurEffect/BackdropFilter fallbacks), foldable & iPhone Duo vertical side-strip docking, and a collapsible macOS/desktop sidebar with Light/Dark theming.

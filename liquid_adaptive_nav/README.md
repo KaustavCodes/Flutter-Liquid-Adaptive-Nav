@@ -34,7 +34,7 @@ Add `liquid_adaptive_nav` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  liquid_adaptive_nav: ^0.0.2
+  liquid_adaptive_nav: ^0.0.3
 ```
 
 ## Quick Start

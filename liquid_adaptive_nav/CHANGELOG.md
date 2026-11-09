@@ -1,3 +1,8 @@
+## 0.0.3
+
+* Updated `display_posture_detector` dependency to `^0.0.5`.
+* Synchronized `0.0.3` version metadata across iOS/macOS podspecs and `README.md`.
+
 ## 0.0.2
 
 * Shortened `pubspec.yaml` package `description` to within pub.dev's 60–180 character guideline.
