@@ -12,11 +12,6 @@ dependencies:
     path: ../
   cupertino_icons: ^1.0.8
 
-# TEMPORARY local override while display_posture_detector 0.0.4 is unreleased on pub.dev.
-dependency_overrides:
-  display_posture_detector:
-    path: ../../../Flutter-Display-Posture-Detector-Plugin/display_posture_detector
-
 dev_dependencies:
   integration_test:
     sdk: flutter

@@ -1,6 +1,10 @@
 # liquid_adaptive_nav
 
-Adaptive Apple **Liquid Glass** navigation bars, foldable & iPhone Duo vertical side-strip docking, a collapsible macOS/desktop sidebar, and full Light/Dark theme customization — built on top of [`display_posture_detector`](https://github.com/KaustavCodes/Flutter-Display-Posture-Detector-Plugin).
+[![Publisher: kauscoder.com](https://img.shields.io/badge/Publisher-kauscoder.com-indigo.svg)](https://kauscoder.com)
+[![Platform](https://img.shields.io/badge/Platform-iOS%20%7C%20macOS%20%7C%20Android-blue.svg)](https://pub.dev/packages/liquid_adaptive_nav)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
+Adaptive Apple **Liquid Glass** navigation bars, foldable & iPhone Duo vertical side-strip docking, a collapsible macOS/desktop sidebar, and full Light/Dark theme customization — built on top of [`display_posture_detector`](https://pub.dev/packages/display_posture_detector).
 
 ## Features
 
@@ -23,6 +27,15 @@ Adaptive Apple **Liquid Glass** navigation bars, foldable & iPhone Duo vertical 
 | **iOS** | Floating Pill + Asymmetric Duo Vertical Strip + `DuoSideActionStrip` | Native `UIGlassEffect` (iOS 26+) -> `UIBlurEffect` (< iOS 26) |
 | **macOS** | Collapsible Sectioned Sidebar + Collapsed Toolbar (Floating Pill when compact) | `BackdropFilter` Frosted Capsule |
 | **Android** | Material 3 `NavigationBar` (or optional `appleGlass` Pill) + Foldable Posture Support | Material 3 / `BackdropFilter` |
+
+## Installation
+
+Add `liquid_adaptive_nav` to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  liquid_adaptive_nav: ^0.0.1
+```
 
 ## Quick Start
 
@@ -117,4 +130,4 @@ class _HomePageState extends State<HomePage> {
 
 ## Example App
 
-See [`example/lib/main.dart`](example/lib/main.dart) for an interactive demo featuring Light/Dark/System switching, color presets, live font family & label size customization, blur slider, native iOS `UIGlassEffect` tinting, pushed `LiquidDuoPageContainer` / `DuoSideActionStrip`, and collapsible macOS sidebar controls.
+See [`example/lib/main.dart`](https://github.com/KaustavCodes/Flutter-Liquid-Adaptive-Nav/blob/main/liquid_adaptive_nav/example/lib/main.dart) for an interactive demo featuring Light/Dark/System switching, color presets, live font family & label size customization, blur slider, native iOS `UIGlassEffect` tinting, pushed `LiquidDuoPageContainer` / `DuoSideActionStrip`, and collapsible macOS sidebar controls.

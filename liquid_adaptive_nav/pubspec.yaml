@@ -7,6 +7,12 @@ version: 0.0.1
 homepage: https://kauscoder.com
 repository: https://github.com/KaustavCodes/Flutter-Liquid-Adaptive-Nav
 issue_tracker: https://github.com/KaustavCodes/Flutter-Liquid-Adaptive-Nav/issues
+topics:
+  - navigation
+  - liquid-glass
+  - foldable
+  - adaptive-ui
+  - responsive
 
 environment:
   sdk: ^3.13.7
