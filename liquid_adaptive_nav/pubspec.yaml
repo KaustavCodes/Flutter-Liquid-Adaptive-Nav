@@ -17,12 +17,6 @@ dependencies:
     sdk: flutter
   display_posture_detector: ^0.0.4
 
-# TEMPORARY local override while display_posture_detector 0.0.4 is unreleased on pub.dev.
-# Remove this section before running `dart pub publish` once ^0.0.4 is published.
-dependency_overrides:
-  display_posture_detector:
-    path: ../../Flutter-Display-Posture-Detector-Plugin/display_posture_detector
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
