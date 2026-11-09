@@ -1,3 +1,8 @@
+## 0.0.2
+
+* Shortened `pubspec.yaml` package `description` to within pub.dev's 60–180 character guideline.
+* Synchronized `0.0.2` version metadata across iOS/macOS podspecs and `README.md`.
+
 ## 0.0.1
 
 * Initial release of `liquid_adaptive_nav` with support for **iOS**, **macOS**, and **Android**.
