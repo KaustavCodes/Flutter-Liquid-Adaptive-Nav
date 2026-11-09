@@ -71,8 +71,12 @@ class DuoSideStripSpec {
           listEquals(occlusionRects, other.occlusionRects);
 
   @override
-  int get hashCode =>
-      Object.hash(edge, width, occlusionPadding, Object.hashAll(occlusionRects));
+  int get hashCode => Object.hash(
+    edge,
+    width,
+    occlusionPadding,
+    Object.hashAll(occlusionRects),
+  );
 
   @override
   String toString() =>
@@ -175,8 +179,9 @@ class AdaptiveLayoutMetrics {
     final windowSize = effectiveWindowSize;
 
     DuoSideStripSpec buildSpec(DuoSideStripEdge edge, double width) {
-      final stripHeight =
-          windowSize.height > 0 ? windowSize.height : viewportSize.height;
+      final stripHeight = windowSize.height > 0
+          ? windowSize.height
+          : viewportSize.height;
       final stripRect = PostureRect(
         left: edge == DuoSideStripEdge.right
             ? math.max(0.0, windowSize.width - width)
@@ -326,16 +331,18 @@ class ResponsivePostureBuilder extends StatelessWidget {
           final mqSize = MediaQuery.sizeOf(context);
           final width =
               constraints.hasBoundedWidth && constraints.maxWidth.isFinite
-                  ? constraints.maxWidth
-                  : mqSize.width;
+              ? constraints.maxWidth
+              : mqSize.width;
           final height =
               constraints.hasBoundedHeight && constraints.maxHeight.isFinite
-                  ? constraints.maxHeight
-                  : mqSize.height;
+              ? constraints.maxHeight
+              : mqSize.height;
           final size = Size(width, height);
-          final orientation =
-              width >= height ? Orientation.landscape : Orientation.portrait;
-          final posture = effectiveOverride ??
+          final orientation = width >= height
+              ? Orientation.landscape
+              : Orientation.portrait;
+          final posture =
+              effectiveOverride ??
               PostureEvent(
                 foldState: FoldState.normal,
                 isSeparating: false,
@@ -368,12 +375,12 @@ class ResponsivePostureBuilder extends StatelessWidget {
             final mqSize = MediaQuery.sizeOf(context);
             final width =
                 constraints.hasBoundedWidth && constraints.maxWidth.isFinite
-                    ? constraints.maxWidth
-                    : mqSize.width;
+                ? constraints.maxWidth
+                : mqSize.width;
             final height =
                 constraints.hasBoundedHeight && constraints.maxHeight.isFinite
-                    ? constraints.maxHeight
-                    : mqSize.height;
+                ? constraints.maxHeight
+                : mqSize.height;
             final orientation = MediaQuery.of(context).orientation;
             return builder(
               context,

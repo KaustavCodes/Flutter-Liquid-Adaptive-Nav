@@ -65,8 +65,9 @@ class _LiquidAdaptiveNavExampleAppState
             activeIndicatorColor: selected.withValues(alpha: 0.20),
             enableNativeGlass: _enableNativeGlass,
             blurSigma: _blurSigma,
-            nativeGlassTintColor:
-                _tintNativeGlass ? selected.withValues(alpha: 0.18) : null,
+            nativeGlassTintColor: _tintNativeGlass
+                ? selected.withValues(alpha: 0.18)
+                : null,
           )
         : LiquidAdaptiveNavTheme.light(
             fontFamily: _fontChoice.family,
@@ -75,8 +76,9 @@ class _LiquidAdaptiveNavExampleAppState
             activeIndicatorColor: selected.withValues(alpha: 0.14),
             enableNativeGlass: _enableNativeGlass,
             blurSigma: _blurSigma,
-            nativeGlassTintColor:
-                _tintNativeGlass ? selected.withValues(alpha: 0.14) : null,
+            nativeGlassTintColor: _tintNativeGlass
+                ? selected.withValues(alpha: 0.14)
+                : null,
           );
 
     return base.copyWith(
@@ -145,9 +147,11 @@ class _LiquidAdaptiveNavExampleAppState
               onPresetChanged: (p) => setState(() => _preset = p),
               onFontChanged: (f) => setState(() => _fontChoice = f),
               onPlatformStyleChanged: (s) => setState(() => _platformStyle = s),
-              onNativeGlassChanged: (v) => setState(() => _enableNativeGlass = v),
+              onNativeGlassChanged: (v) =>
+                  setState(() => _enableNativeGlass = v),
               onTintGlassChanged: (v) => setState(() => _tintNativeGlass = v),
-              onSimulateDuoChanged: (v) => setState(() => _simulateDuoStrip = v),
+              onSimulateDuoChanged: (v) =>
+                  setState(() => _simulateDuoStrip = v),
               onBlurChanged: (v) => setState(() => _blurSigma = v),
               onLabelSizeOffsetChanged: (v) =>
                   setState(() => _labelSizeOffset = v),
@@ -244,18 +248,16 @@ class _DemoHomeShellState extends State<_DemoHomeShell> {
   ];
 
   void _openDetailScreen(BuildContext context, AdaptiveLayoutMetrics metrics) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => const _DemoDetailPage(),
-      ),
-    );
+    Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (_) => const _DemoDetailPage()));
   }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final activeAccent =
-        isDark ? widget.preset.darkSelected : widget.preset.lightSelected;
+    final activeAccent = isDark
+        ? widget.preset.darkSelected
+        : widget.preset.lightSelected;
 
     return LiquidAdaptiveNavShell(
       destinations: _destinations,
@@ -318,7 +320,9 @@ class _DemoHomeShellState extends State<_DemoHomeShell> {
               icon: CupertinoIcons.arrow_up_right_square,
               selectsOnTap: false,
               onTap: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(builder: (_) => const _DemoDetailPage()),
+                MaterialPageRoute<void>(
+                  builder: (_) => const _DemoDetailPage(),
+                ),
               ),
             ),
             LiquidSidebarItem(
@@ -446,9 +450,8 @@ class _HeaderCard extends StatelessWidget {
                     children: [
                       Text(
                         '${destination.label} Tab',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                        style: Theme.of(context).textTheme.titleLarge
+                            ?.copyWith(fontWeight: FontWeight.w700),
                       ),
                       Text(
                         'SizeClass: ${metrics.sizeClass.name} • '
@@ -530,12 +533,14 @@ class _AppearanceControlsCard extends StatelessWidget {
           children: [
             Text(
               'Theme, Colors & Font Playground',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
+              style: Theme.of(context).textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 12),
-            Text('Appearance Mode', style: Theme.of(context).textTheme.labelMedium),
+            Text(
+              'Appearance Mode',
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
             const SizedBox(height: 6),
             SegmentedButton<ThemeMode>(
               segments: const [
@@ -547,7 +552,10 @@ class _AppearanceControlsCard extends StatelessWidget {
               onSelectionChanged: (s) => onThemeModeChanged(s.first),
             ),
             const SizedBox(height: 14),
-            Text('Selected Color', style: Theme.of(context).textTheme.labelMedium),
+            Text(
+              'Selected Color',
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
             const SizedBox(height: 6),
             Wrap(
               spacing: 8,
@@ -566,7 +574,10 @@ class _AppearanceControlsCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 14),
-            Text('Label Font Family', style: Theme.of(context).textTheme.labelMedium),
+            Text(
+              'Label Font Family',
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
             const SizedBox(height: 6),
             Wrap(
               spacing: 8,
@@ -584,7 +595,10 @@ class _AppearanceControlsCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 14),
-            Text('Bar Style (Android / Apple)', style: Theme.of(context).textTheme.labelMedium),
+            Text(
+              'Bar Style (Android / Apple)',
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
             const SizedBox(height: 6),
             SegmentedButton<FloatingNavPlatformStyle>(
               segments: const [
@@ -611,16 +625,13 @@ class _AppearanceControlsCard extends StatelessWidget {
                 Text(blurSigma.toStringAsFixed(0)),
               ],
             ),
-            Slider(
-              value: blurSigma,
-              min: 8,
-              max: 44,
-              onChanged: onBlurChanged,
-            ),
+            Slider(value: blurSigma, min: 8, max: 44, onChanged: onBlurChanged),
             Row(
               children: [
                 const Expanded(child: Text('Label Font Size Offset')),
-                Text('${labelSizeOffset >= 0 ? '+' : ''}${labelSizeOffset.toStringAsFixed(1)}'),
+                Text(
+                  '${labelSizeOffset >= 0 ? '+' : ''}${labelSizeOffset.toStringAsFixed(1)}',
+                ),
               ],
             ),
             Slider(

@@ -77,22 +77,23 @@ class FloatingPillNavBar extends StatelessWidget {
       brightnessOverride: brightness,
     );
     final isDark = effectiveBrightness == Brightness.dark;
-    final resolvedTheme = LiquidAdaptiveNavTheme.resolve(
-      context,
-      override: theme,
-      brightnessOverride: effectiveBrightness,
-    ).withOverrides(
-      fontFamily: fontFamily,
-      selectedColor: selectedColor,
-      unselectedColor: unselectedColor,
-      activeIndicatorColor: activeIndicatorColor,
-      activeIndicatorGradient: activeIndicatorGradient,
-      labelTextStyle: labelTextStyle,
-      selectedLabelTextStyle: selectedLabelTextStyle,
-      enableNativeGlass: enableNativeGlass,
-      enableHaptics: enableHaptics,
-      blurSigma: blurSigma,
-    );
+    final resolvedTheme =
+        LiquidAdaptiveNavTheme.resolve(
+          context,
+          override: theme,
+          brightnessOverride: effectiveBrightness,
+        ).withOverrides(
+          fontFamily: fontFamily,
+          selectedColor: selectedColor,
+          unselectedColor: unselectedColor,
+          activeIndicatorColor: activeIndicatorColor,
+          activeIndicatorGradient: activeIndicatorGradient,
+          labelTextStyle: labelTextStyle,
+          selectedLabelTextStyle: selectedLabelTextStyle,
+          enableNativeGlass: enableNativeGlass,
+          enableHaptics: enableHaptics,
+          blurSigma: blurSigma,
+        );
 
     final platform = Theme.of(context).platform;
     final isAndroid = platform == TargetPlatform.android;
@@ -145,12 +146,16 @@ class FloatingPillNavBar extends StatelessWidget {
           cornerRadius: resolvedTheme.horizontalPillCornerRadius,
           isDark: isDark,
           blurSigma: math.max(resolvedTheme.blurSigma, 30.0),
-          lightTopAlpha: resolvedTheme.glassGradientColors != null ? null : 0.70,
-          lightBottomAlpha:
-              resolvedTheme.glassGradientColors != null ? null : 0.45,
+          lightTopAlpha: resolvedTheme.glassGradientColors != null
+              ? null
+              : 0.70,
+          lightBottomAlpha: resolvedTheme.glassGradientColors != null
+              ? null
+              : 0.45,
           darkTopAlpha: resolvedTheme.glassGradientColors != null ? null : 0.40,
-          darkBottomAlpha:
-              resolvedTheme.glassGradientColors != null ? null : 0.23,
+          darkBottomAlpha: resolvedTheme.glassGradientColors != null
+              ? null
+              : 0.23,
           enableNativeGlass: resolvedTheme.enableNativeGlass,
           theme: resolvedTheme,
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -313,14 +318,18 @@ class FloatingPillNavBar extends StatelessWidget {
                   isDark: isDark,
                   blurSigma: resolvedTheme.blurSigma,
                   showLightOuterHairline: true,
-                  lightTopAlpha:
-                      resolvedTheme.glassGradientColors != null ? null : 0.75,
-                  lightBottomAlpha:
-                      resolvedTheme.glassGradientColors != null ? null : 0.47,
-                  darkTopAlpha:
-                      resolvedTheme.glassGradientColors != null ? null : 0.40,
-                  darkBottomAlpha:
-                      resolvedTheme.glassGradientColors != null ? null : 0.23,
+                  lightTopAlpha: resolvedTheme.glassGradientColors != null
+                      ? null
+                      : 0.75,
+                  lightBottomAlpha: resolvedTheme.glassGradientColors != null
+                      ? null
+                      : 0.47,
+                  darkTopAlpha: resolvedTheme.glassGradientColors != null
+                      ? null
+                      : 0.40,
+                  darkBottomAlpha: resolvedTheme.glassGradientColors != null
+                      ? null
+                      : 0.23,
                   enableNativeGlass: resolvedTheme.enableNativeGlass,
                   theme: resolvedTheme,
                   padding: const EdgeInsets.symmetric(
@@ -345,9 +354,10 @@ class FloatingPillNavBar extends StatelessWidget {
                             child: Container(
                               decoration: BoxDecoration(
                                 color:
-                                    resolvedTheme.activeIndicatorGradient == null
-                                        ? activeFill
-                                        : null,
+                                    resolvedTheme.activeIndicatorGradient ==
+                                        null
+                                    ? activeFill
+                                    : null,
                                 gradient: resolvedTheme.activeIndicatorGradient,
                                 borderRadius: BorderRadius.circular(
                                   math.max(4.0, cornerRadius - 4),
@@ -424,8 +434,9 @@ class FloatingPillNavBar extends StatelessWidget {
                         Icon(
                           destination.iconForSelection(isSelected: isSelected),
                           size: iconSize,
-                          color:
-                              isSelected ? activeIconColor : inactiveIconColor,
+                          color: isSelected
+                              ? activeIconColor
+                              : inactiveIconColor,
                         ),
                         const SizedBox(height: 1.5),
                         FittedBox(

@@ -386,7 +386,8 @@ class LiquidAdaptiveNavTheme extends ThemeExtension<LiquidAdaptiveNavTheme> {
     return base.copyWith(scaffoldBackgroundColor: colorScheme.surface);
   }
 
-  /// Convenience factory selecting [.light] or [.dark] for [brightness].
+  /// Convenience factory selecting [LiquidAdaptiveNavTheme.light] or
+  /// [LiquidAdaptiveNavTheme.dark] for [brightness].
   factory LiquidAdaptiveNavTheme.adaptive({
     required Brightness brightness,
     String? fontFamily,
@@ -657,8 +658,7 @@ class LiquidAdaptiveNavTheme extends ThemeExtension<LiquidAdaptiveNavTheme> {
           other.glassHairlineBorderColor ?? glassHairlineBorderColor,
       glassShadows: other.glassShadows ?? glassShadows,
       nativeGlassTintColor: other.nativeGlassTintColor ?? nativeGlassTintColor,
-      actionStripIconColor:
-          other.actionStripIconColor ?? actionStripIconColor,
+      actionStripIconColor: other.actionStripIconColor ?? actionStripIconColor,
       actionStripLabelColor:
           other.actionStripLabelColor ?? actionStripLabelColor,
       actionStripDividerColor:
@@ -731,10 +731,12 @@ class LiquidAdaptiveNavTheme extends ThemeExtension<LiquidAdaptiveNavTheme> {
         ? (selectedLabelTextStyle ?? labelTextStyle)
         : labelTextStyle;
     if (custom == null) return base;
-    return base.merge(custom).copyWith(
-      fontFamily: custom.fontFamily ?? fontFamily,
-      color: custom.color ?? color,
-    );
+    return base
+        .merge(custom)
+        .copyWith(
+          fontFamily: custom.fontFamily ?? fontFamily,
+          color: custom.color ?? color,
+        );
   }
 
   /// Resolves the vertical Duo side-strip pill [TextStyle] for an item.
@@ -754,10 +756,12 @@ class LiquidAdaptiveNavTheme extends ThemeExtension<LiquidAdaptiveNavTheme> {
         ? (selectedVerticalLabelTextStyle ?? verticalLabelTextStyle)
         : verticalLabelTextStyle;
     if (custom == null) return base;
-    return base.merge(custom).copyWith(
-      fontFamily: custom.fontFamily ?? fontFamily,
-      color: custom.color ?? color,
-    );
+    return base
+        .merge(custom)
+        .copyWith(
+          fontFamily: custom.fontFamily ?? fontFamily,
+          color: custom.color ?? color,
+        );
   }
 
   /// Resolves the [DuoSideActionStrip] label [TextStyle].
@@ -774,10 +778,12 @@ class LiquidAdaptiveNavTheme extends ThemeExtension<LiquidAdaptiveNavTheme> {
     );
     final custom = actionStripLabelTextStyle;
     if (custom == null) return base;
-    return base.merge(custom).copyWith(
-      fontFamily: custom.fontFamily ?? fontFamily,
-      color: itemColor ?? custom.color ?? fallbackColor,
-    );
+    return base
+        .merge(custom)
+        .copyWith(
+          fontFamily: custom.fontFamily ?? fontFamily,
+          color: itemColor ?? custom.color ?? fallbackColor,
+        );
   }
 
   /// Resolves the [MacOSSidebarNavigation] item [TextStyle].
@@ -795,10 +801,12 @@ class LiquidAdaptiveNavTheme extends ThemeExtension<LiquidAdaptiveNavTheme> {
         ? (selectedSidebarItemTextStyle ?? sidebarItemTextStyle)
         : sidebarItemTextStyle;
     if (custom == null) return base;
-    return base.merge(custom).copyWith(
-      fontFamily: custom.fontFamily ?? fontFamily,
-      color: custom.color ?? color,
-    );
+    return base
+        .merge(custom)
+        .copyWith(
+          fontFamily: custom.fontFamily ?? fontFamily,
+          color: custom.color ?? color,
+        );
   }
 
   /// Resolves the [MacOSSidebarNavigation] section header [TextStyle].
@@ -813,10 +821,12 @@ class LiquidAdaptiveNavTheme extends ThemeExtension<LiquidAdaptiveNavTheme> {
     );
     final custom = sidebarSectionHeaderTextStyle;
     if (custom == null) return base;
-    return base.merge(custom).copyWith(
-      fontFamily: custom.fontFamily ?? fontFamily,
-      color: custom.color ?? color,
-    );
+    return base
+        .merge(custom)
+        .copyWith(
+          fontFamily: custom.fontFamily ?? fontFamily,
+          color: custom.color ?? color,
+        );
   }
 
   /// Resolves the [MacOSSidebarNavigation] header title [TextStyle].
@@ -830,10 +840,12 @@ class LiquidAdaptiveNavTheme extends ThemeExtension<LiquidAdaptiveNavTheme> {
     );
     final custom = sidebarTitleTextStyle;
     if (custom == null) return base;
-    return base.merge(custom).copyWith(
-      fontFamily: custom.fontFamily ?? fontFamily,
-      color: custom.color ?? fallbackColor,
-    );
+    return base
+        .merge(custom)
+        .copyWith(
+          fontFamily: custom.fontFamily ?? fontFamily,
+          color: custom.color ?? fallbackColor,
+        );
   }
 
   /// Resolves the collapsed desktop toolbar title [TextStyle].
@@ -849,10 +861,12 @@ class LiquidAdaptiveNavTheme extends ThemeExtension<LiquidAdaptiveNavTheme> {
     );
     final custom = collapsedToolbarTitleTextStyle;
     if (custom == null) return base;
-    return base.merge(custom).copyWith(
-      fontFamily: custom.fontFamily ?? fontFamily,
-      color: custom.color ?? fallbackColor,
-    );
+    return base
+        .merge(custom)
+        .copyWith(
+          fontFamily: custom.fontFamily ?? fontFamily,
+          color: custom.color ?? fallbackColor,
+        );
   }
 
   @override
@@ -1313,11 +1327,7 @@ class LiquidAdaptiveNavTheme extends ThemeExtension<LiquidAdaptiveNavTheme> {
     );
   }
 
-  static List<Color>? _lerpColorList(
-    List<Color>? a,
-    List<Color>? b,
-    double t,
-  ) {
+  static List<Color>? _lerpColorList(List<Color>? a, List<Color>? b, double t) {
     if (a == null && b == null) return null;
     if (a == null) return b;
     if (b == null) return a;

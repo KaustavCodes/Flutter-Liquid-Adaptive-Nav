@@ -93,9 +93,11 @@ class LiquidGlassCapsule extends StatelessWidget {
       override: theme,
       brightnessOverride: brightnessOverride,
     );
-    final effectiveDark = isDark ??
+    final effectiveDark =
+        isDark ??
         LiquidAdaptiveNavTheme.resolveBrightness(context) == Brightness.dark;
-    final effectiveNative = enableNativeGlass ?? resolvedTheme.enableNativeGlass;
+    final effectiveNative =
+        enableNativeGlass ?? resolvedTheme.enableNativeGlass;
     final effectiveTint = tintColor ?? resolvedTheme.nativeGlassTintColor;
 
     if (shouldUseNativeGlass(context, enableNativeGlass: effectiveNative)) {

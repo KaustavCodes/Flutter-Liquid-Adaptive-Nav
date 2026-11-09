@@ -75,10 +75,7 @@ class DuoSideStripLayout {
       bottomGap *= ratio;
     }
 
-    final availableHeight = math.max(
-      0.0,
-      containerHeight - topGap - bottomGap,
-    );
+    final availableHeight = math.max(0.0, containerHeight - topGap - bottomGap);
 
     return DuoSideStripLayout(
       stripWidth: stripWidth,
@@ -127,7 +124,8 @@ class DuoSideActionStrip extends StatelessWidget {
     this.enableHaptics,
   });
 
-  /// Returns a [Positioned] docked directly along [strip.edge] inside a [Stack].
+  /// Returns a [Positioned] docked directly along [strip]'s
+  /// [DuoSideStripSpec.edge] inside a [Stack].
   static Widget positioned({
     Key? key,
     required DuoSideStripSpec strip,
@@ -181,19 +179,20 @@ class DuoSideActionStrip extends StatelessWidget {
           );
     final useDarkGlass = effectiveBrightness == Brightness.dark;
 
-    final resolvedTheme = LiquidAdaptiveNavTheme.resolve(
-      context,
-      override: theme,
-      brightnessOverride: effectiveBrightness,
-    ).withOverrides(
-      fontFamily: fontFamily,
-      actionStripIconColor: iconColor,
-      actionStripLabelColor: labelColor,
-      actionStripDividerColor: dividerColor,
-      actionStripLabelTextStyle: labelTextStyle,
-      enableNativeGlass: enableNativeGlass,
-      enableHaptics: enableHaptics,
-    );
+    final resolvedTheme =
+        LiquidAdaptiveNavTheme.resolve(
+          context,
+          override: theme,
+          brightnessOverride: effectiveBrightness,
+        ).withOverrides(
+          fontFamily: fontFamily,
+          actionStripIconColor: iconColor,
+          actionStripLabelColor: labelColor,
+          actionStripDividerColor: dividerColor,
+          actionStripLabelTextStyle: labelTextStyle,
+          enableNativeGlass: enableNativeGlass,
+          enableHaptics: enableHaptics,
+        );
 
     final viewPadding = MediaQuery.viewPaddingOf(context);
     final viewportSize = MediaQuery.sizeOf(context);

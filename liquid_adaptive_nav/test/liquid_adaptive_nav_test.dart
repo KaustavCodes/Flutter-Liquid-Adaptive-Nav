@@ -40,48 +40,52 @@ const _sampleDestinations = <LiquidNavDestination>[
 
 void main() {
   group('LiquidAdaptiveNavTheme', () {
-    test('light and dark presets provide distinct defaults and lerp smoothly', () {
-      final light = LiquidAdaptiveNavTheme.light(
-        fontFamily: 'Georgia',
-        selectedColor: const Color(0xFFEA580C),
-      );
-      final dark = LiquidAdaptiveNavTheme.dark(
-        fontFamily: 'Courier',
-        selectedColor: const Color(0xFF38BDF8),
-      );
+    test(
+      'light and dark presets provide distinct defaults and lerp smoothly',
+      () {
+        final light = LiquidAdaptiveNavTheme.light(
+          fontFamily: 'Georgia',
+          selectedColor: const Color(0xFFEA580C),
+        );
+        final dark = LiquidAdaptiveNavTheme.dark(
+          fontFamily: 'Courier',
+          selectedColor: const Color(0xFF38BDF8),
+        );
 
-      expect(light.selectedColor, const Color(0xFFEA580C));
-      expect(light.selectedIconColor, const Color(0xFFEA580C));
-      expect(light.fontFamily, 'Georgia');
-      expect(
-        light.resolveHorizontalLabelStyle(isSelected: true).fontFamily,
-        'Georgia',
-      );
-      expect(
-        light.resolveHorizontalLabelStyle(isSelected: true).color,
-        const Color(0xFFEA580C),
-      );
+        expect(light.selectedColor, const Color(0xFFEA580C));
+        expect(light.selectedIconColor, const Color(0xFFEA580C));
+        expect(light.fontFamily, 'Georgia');
+        expect(
+          light.resolveHorizontalLabelStyle(isSelected: true).fontFamily,
+          'Georgia',
+        );
+        expect(
+          light.resolveHorizontalLabelStyle(isSelected: true).color,
+          const Color(0xFFEA580C),
+        );
 
-      final mid = light.lerp(dark, 0.5);
-      expect(
-        mid.selectedColor,
-        Color.lerp(const Color(0xFFEA580C), const Color(0xFF38BDF8), 0.5),
-      );
-      expect(mid.fontFamily, 'Courier');
-    });
+        final mid = light.lerp(dark, 0.5);
+        expect(
+          mid.selectedColor,
+          Color.lerp(const Color(0xFFEA580C), const Color(0xFF38BDF8), 0.5),
+        );
+        expect(mid.fontFamily, 'Courier');
+      },
+    );
 
     test('fromColorScheme and withOverrides cascade colors & font cleanly', () {
       final scheme = ColorScheme.fromSeed(
         seedColor: Colors.teal,
         brightness: Brightness.dark,
       );
-      final derived = LiquidAdaptiveNavTheme.fromColorScheme(
-        scheme,
-        fontFamily: 'Avenir Next',
-      ).withOverrides(
-        selectedColor: Colors.amber,
-        unselectedColor: Colors.grey,
-      );
+      final derived =
+          LiquidAdaptiveNavTheme.fromColorScheme(
+            scheme,
+            fontFamily: 'Avenir Next',
+          ).withOverrides(
+            selectedColor: Colors.amber,
+            unselectedColor: Colors.grey,
+          );
 
       expect(derived.fontFamily, 'Avenir Next');
       expect(derived.selectedIconColor, Colors.amber);
@@ -259,49 +263,52 @@ void main() {
       expect(strip, isNull);
     });
 
-    test('resolves asymmetric iPhone Duo strip & camera occlusion clearances', () {
-      const metrics = AdaptiveLayoutMetrics(
-        posture: PostureEvent(
-          foldState: FoldState.flat,
-          isSeparating: false,
-          orientation: PostureOrientation.landscape,
-          sidePanel: PostureRect(left: 867, top: 0, width: 84, height: 669),
-          occlusionAreas: [
-            PostureRect(left: 867, top: 0, width: 84, height: 112),
-            PostureRect(left: 867, top: 589, width: 84, height: 80),
-          ],
-        ),
-        sizeClass: WindowSizeClass.medium,
-        viewportSize: Size(951, 669),
-        orientation: Orientation.landscape,
-      );
+    test(
+      'resolves asymmetric iPhone Duo strip & camera occlusion clearances',
+      () {
+        const metrics = AdaptiveLayoutMetrics(
+          posture: PostureEvent(
+            foldState: FoldState.flat,
+            isSeparating: false,
+            orientation: PostureOrientation.landscape,
+            sidePanel: PostureRect(left: 867, top: 0, width: 84, height: 669),
+            occlusionAreas: [
+              PostureRect(left: 867, top: 0, width: 84, height: 112),
+              PostureRect(left: 867, top: 589, width: 84, height: 80),
+            ],
+          ),
+          sizeClass: WindowSizeClass.medium,
+          viewportSize: Size(951, 669),
+          orientation: Orientation.landscape,
+        );
 
-      final strip = metrics.resolveDuoSideStrip(
-        platform: TargetPlatform.iOS,
-        viewPadding: const EdgeInsets.only(right: 84),
-      );
-      expect(strip, isNotNull);
-      expect(strip!.edge, DuoSideStripEdge.right);
-      expect(strip.width, 84);
-      expect(strip.occlusionPadding.top, closeTo(120, 0.01));
-      expect(strip.occlusionPadding.bottom, closeTo(88, 0.01));
+        final strip = metrics.resolveDuoSideStrip(
+          platform: TargetPlatform.iOS,
+          viewPadding: const EdgeInsets.only(right: 84),
+        );
+        expect(strip, isNotNull);
+        expect(strip!.edge, DuoSideStripEdge.right);
+        expect(strip.width, 84);
+        expect(strip.occlusionPadding.top, closeTo(120, 0.01));
+        expect(strip.occlusionPadding.bottom, closeTo(88, 0.01));
 
-      // Android & macOS never resolve an iOS hardware side strip
-      expect(
-        metrics.resolveDuoSideStrip(
-          platform: TargetPlatform.android,
-          viewPadding: const EdgeInsets.only(right: 84),
-        ),
-        isNull,
-      );
-      expect(
-        metrics.resolveDuoSideStrip(
-          platform: TargetPlatform.macOS,
-          viewPadding: const EdgeInsets.only(right: 84),
-        ),
-        isNull,
-      );
-    });
+        // Android & macOS never resolve an iOS hardware side strip
+        expect(
+          metrics.resolveDuoSideStrip(
+            platform: TargetPlatform.android,
+            viewPadding: const EdgeInsets.only(right: 84),
+          ),
+          isNull,
+        );
+        expect(
+          metrics.resolveDuoSideStrip(
+            platform: TargetPlatform.macOS,
+            viewPadding: const EdgeInsets.only(right: 84),
+          ),
+          isNull,
+        );
+      },
+    );
 
     testWidgets('DuoSideActionStrip renders actions and triggers callbacks', (
       tester,
@@ -402,9 +409,7 @@ void main() {
         expect(find.text('Page: Settings'), findsOneWidget);
 
         // Collapse sidebar -> collapsed toolbar should appear with Show button
-        await tester.tap(
-          find.byKey(const ValueKey('mac_hide_sidebar_button')),
-        );
+        await tester.tap(find.byKey(const ValueKey('mac_hide_sidebar_button')));
         await tester.pumpAndSettle();
         expect(
           find.byKey(const ValueKey('mac_collapsed_toolbar')),
@@ -412,9 +417,7 @@ void main() {
         );
 
         // Expand back
-        await tester.tap(
-          find.byKey(const ValueKey('mac_show_sidebar_button')),
-        );
+        await tester.tap(find.byKey(const ValueKey('mac_show_sidebar_button')));
         await tester.pumpAndSettle();
         expect(
           find.byKey(const ValueKey('mac_expanded_no_toolbar')),

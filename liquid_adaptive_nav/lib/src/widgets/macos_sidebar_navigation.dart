@@ -231,7 +231,8 @@ class MacOSSidebarNavigation extends StatelessWidget {
     bool isDark,
     LiquidAdaptiveNavTheme resolvedTheme,
   ) {
-    final hasBrand = brandLeading != null || (title != null && title!.isNotEmpty);
+    final hasBrand =
+        brandLeading != null || (title != null && title!.isNotEmpty);
     if (!hasBrand && !(showCollapseButton && onToggleCollapse != null)) {
       return const SizedBox(height: 12);
     }
@@ -335,7 +336,9 @@ class MacOSSidebarNavigation extends StatelessWidget {
           duration: const Duration(milliseconds: 150),
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
           decoration: BoxDecoration(
-            color: isSelected && selectedGradient == null ? selectedColor : null,
+            color: isSelected && selectedGradient == null
+                ? selectedColor
+                : null,
             gradient: isSelected ? selectedGradient : null,
             borderRadius: BorderRadius.circular(8),
             border: isSelected

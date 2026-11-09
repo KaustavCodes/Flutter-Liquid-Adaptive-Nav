@@ -237,21 +237,22 @@ class _LiquidAdaptiveNavShellState extends State<LiquidAdaptiveNavShell> {
       brightnessOverride: widget.brightness,
     );
     final isDark = effectiveBrightness == Brightness.dark;
-    final resolvedTheme = LiquidAdaptiveNavTheme.resolve(
-      context,
-      override: widget.theme,
-      lightTheme: widget.lightTheme,
-      darkTheme: widget.darkTheme,
-      brightnessOverride: effectiveBrightness,
-    ).withOverrides(
-      fontFamily: widget.fontFamily,
-      selectedColor: widget.selectedColor,
-      unselectedColor: widget.unselectedColor,
-      activeIndicatorColor: widget.activeIndicatorColor,
-      scaffoldBackgroundColor: widget.scaffoldBackgroundColor,
-      enableNativeGlass: widget.enableNativeGlass,
-      enableHaptics: widget.enableHaptics,
-    );
+    final resolvedTheme =
+        LiquidAdaptiveNavTheme.resolve(
+          context,
+          override: widget.theme,
+          lightTheme: widget.lightTheme,
+          darkTheme: widget.darkTheme,
+          brightnessOverride: effectiveBrightness,
+        ).withOverrides(
+          fontFamily: widget.fontFamily,
+          selectedColor: widget.selectedColor,
+          unselectedColor: widget.unselectedColor,
+          activeIndicatorColor: widget.activeIndicatorColor,
+          scaffoldBackgroundColor: widget.scaffoldBackgroundColor,
+          enableNativeGlass: widget.enableNativeGlass,
+          enableHaptics: widget.enableHaptics,
+        );
 
     final platform = Theme.of(context).platform;
     final isMacOS = !kIsWeb && platform == TargetPlatform.macOS;
@@ -407,18 +408,20 @@ class _LiquidAdaptiveNavShellState extends State<LiquidAdaptiveNavShell> {
 
 /// Convenience posture-aware container for pushed routes / detail screens that
 /// automatically pads content clear of an asymmetric iOS / iPhone Duo side strip
-/// and docks optional [duoActions] inside [DuoSideActionStrip].
+/// and docks optional [duoActionsBuilder] actions inside [DuoSideActionStrip].
 class LiquidDuoPageContainer extends StatelessWidget {
   final Widget Function(
     BuildContext context,
     AdaptiveLayoutMetrics metrics,
     DuoSideStripSpec? duoSideStrip,
-  ) builder;
+  )
+  builder;
   final List<DuoSideActionItem> Function(
     BuildContext context,
     AdaptiveLayoutMetrics metrics,
     DuoSideStripSpec duoSideStrip,
-  )? duoActionsBuilder;
+  )?
+  duoActionsBuilder;
   final bool forceDarkGlass;
   final LiquidAdaptiveNavTheme? theme;
   final Brightness? brightness;
@@ -451,10 +454,9 @@ class LiquidDuoPageContainer extends StatelessWidget {
           );
         }
 
-        final actions =
-            (duoSideStrip != null && duoActionsBuilder != null)
-                ? duoActionsBuilder!(context, metrics, duoSideStrip)
-                : const <DuoSideActionItem>[];
+        final actions = (duoSideStrip != null && duoActionsBuilder != null)
+            ? duoActionsBuilder!(context, metrics, duoSideStrip)
+            : const <DuoSideActionItem>[];
 
         if (duoSideStrip == null || actions.isEmpty) {
           return content;

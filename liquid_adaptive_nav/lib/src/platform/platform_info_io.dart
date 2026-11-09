@@ -7,4 +7,5 @@ bool get isIOSHost => !kIsWeb && Platform.isIOS;
 
 bool get isAndroidHost => !kIsWeb && Platform.isAndroid;
 
-bool get isMobileNativeHost => !kIsWeb && (Platform.isAndroid || Platform.isIOS);
+bool get isMobileNativeHost =>
+    !kIsWeb && (Platform.isAndroid || Platform.isIOS);
