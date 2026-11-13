@@ -17,6 +17,10 @@ class LiquidTactileButton extends StatefulWidget {
   final double pressedScale;
   final double pressedOpacity;
   final String? tooltip;
+
+  /// Spoken name for the button. Use this when [child] has no text of its own.
+  /// When set, [tooltip] stays a hover tooltip and is left out of semantics.
+  final String? semanticLabel;
   final Color? hoverColor;
 
   const LiquidTactileButton({
@@ -27,6 +31,7 @@ class LiquidTactileButton extends StatefulWidget {
     this.pressedScale = 0.97,
     this.pressedOpacity = 0.82,
     this.tooltip,
+    this.semanticLabel,
     this.hoverColor,
   });
 
@@ -95,6 +100,7 @@ class _LiquidTactileButtonState extends State<LiquidTactileButton> {
     interactive = Semantics(
       button: true,
       enabled: enabled,
+      label: widget.semanticLabel,
       child: MouseRegion(
         cursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
         onEnter: (_) => setState(() => _isHovered = true),
@@ -104,7 +110,11 @@ class _LiquidTactileButtonState extends State<LiquidTactileButton> {
     );
 
     if (widget.tooltip != null && widget.tooltip!.isNotEmpty) {
-      return Tooltip(message: widget.tooltip!, child: interactive);
+      return Tooltip(
+        message: widget.tooltip!,
+        excludeFromSemantics: widget.semanticLabel != null,
+        child: interactive,
+      );
     }
     return interactive;
   }

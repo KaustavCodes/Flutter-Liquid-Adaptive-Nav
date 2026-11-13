@@ -21,13 +21,17 @@ typedef AdaptiveShellUseSidebarPredicate = bool Function(
 );
 
 /// Top-level adaptive navigation shell coordinating:
-/// - **Desktop / macOS / Landscape Tablet**: Collapsible [MacOSSidebarNavigation]
+/// - **Desktop / macOS / wide Apple glass**: Collapsible [MacOSSidebarNavigation]
 ///   plus an animated top toolbar toggle bar when collapsed.
+/// - **Wide Material windows** (Android, or [FloatingNavPlatformStyle.material]):
+///   Material 3 [NavigationRail].
 /// - **Foldable / iPhone Duo**: Docked vertical [FloatingPillNavBar] aligned
 ///   with the asymmetric hardware side strip, automatically expanding the
 ///   content subtree's `MediaQuery` safe insets clear of the strip.
-/// - **Phone / Portrait Tablet**: Floating bottom Apple Liquid Glass pill or
-///   Material 3 Android [NavigationBar] (controlled via [platformStyle]).
+/// - **Compact Apple glass**: Floating bottom pill. Content `MediaQuery` padding
+///   grows by the pill height so [SafeArea] and list padding clear it, while the
+///   pill still paints over the body.
+/// - **Compact Material**: Material 3 [NavigationBar].
 class LiquidAdaptiveNavShell extends StatefulWidget {
   final List<LiquidNavDestination> destinations;
   final int selectedIndex;
@@ -168,6 +172,104 @@ class _LiquidAdaptiveNavShellState extends State<LiquidAdaptiveNavShell> {
     widget.onSidebarCollapsedChanged?.call(collapsed);
   }
 
+  Widget _wrapHorizontalPillInset(
+    BuildContext context,
+    Widget child,
+    LiquidAdaptiveNavTheme theme,
+  ) {
+    final mediaQuery = MediaQuery.of(context);
+    final inset = theme.horizontalContentBottomInset(mediaQuery.padding);
+    final nextPaddingBottom = mediaQuery.padding.bottom > inset
+        ? mediaQuery.padding.bottom
+        : inset;
+    final nextViewPaddingBottom = mediaQuery.viewPadding.bottom > inset
+        ? mediaQuery.viewPadding.bottom
+        : inset;
+    if (nextPaddingBottom == mediaQuery.padding.bottom &&
+        nextViewPaddingBottom == mediaQuery.viewPadding.bottom) {
+      return child;
+    }
+    return MediaQuery(
+      data: mediaQuery.copyWith(
+        padding: mediaQuery.padding.copyWith(bottom: nextPaddingBottom),
+        viewPadding: mediaQuery.viewPadding.copyWith(
+          bottom: nextViewPaddingBottom,
+        ),
+      ),
+      child: child,
+    );
+  }
+
+  Widget _buildMaterialRailScaffold({
+    required BuildContext context,
+    required Color backgroundColor,
+    required bool isDark,
+    required LiquidAdaptiveNavTheme resolvedTheme,
+    required Widget body,
+  }) {
+    final activeIndex = widget.selectedIndex.clamp(
+      0,
+      widget.destinations.length - 1,
+    );
+    final selectedIconColor =
+        resolvedTheme.androidSelectedIconColor ??
+        resolvedTheme.selectedIconColor ??
+        resolvedTheme.selectedColor ??
+        Theme.of(context).colorScheme.primary;
+    final unselectedIconColor =
+        resolvedTheme.androidUnselectedIconColor ??
+        resolvedTheme.unselectedIconColor ??
+        resolvedTheme.unselectedColor ??
+        Theme.of(context).colorScheme.onSurfaceVariant;
+    final indicatorColor =
+        resolvedTheme.androidIndicatorColor ??
+        resolvedTheme.activeIndicatorColor ??
+        selectedIconColor.withValues(alpha: 0.22);
+    final railColor =
+        resolvedTheme.androidBarBackgroundColor ??
+        (isDark
+            ? const Color(0xFF1E1E22)
+            : Theme.of(context).colorScheme.surface);
+
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      body: Row(
+        children: [
+          NavigationRail(
+            key: const ValueKey('material_nav_rail'),
+            selectedIndex: activeIndex,
+            onDestinationSelected: (index) {
+              resolvedTheme.triggerFeedback();
+              widget.onDestinationSelected(index);
+            },
+            labelType: NavigationRailLabelType.all,
+            backgroundColor: railColor,
+            indicatorColor: indicatorColor,
+            selectedIconTheme: IconThemeData(color: selectedIconColor),
+            unselectedIconTheme: IconThemeData(color: unselectedIconColor),
+            selectedLabelTextStyle: resolvedTheme
+                .resolveHorizontalLabelStyle(isSelected: true)
+                .copyWith(color: selectedIconColor),
+            unselectedLabelTextStyle: resolvedTheme
+                .resolveHorizontalLabelStyle(isSelected: false)
+                .copyWith(color: unselectedIconColor),
+            destinations: [
+              for (final dest in widget.destinations)
+                NavigationRailDestination(
+                  icon: Icon(dest.materialIconForSelection(isSelected: false)),
+                  selectedIcon: Icon(
+                    dest.materialIconForSelection(isSelected: true),
+                  ),
+                  label: Text(dest.label),
+                ),
+            ],
+          ),
+          Expanded(child: body),
+        ],
+      ),
+    );
+  }
+
   Widget _buildBody(BuildContext context, AdaptiveLayoutMetrics metrics) {
     if (widget.bodyBuilder != null) {
       return widget.bodyBuilder!(context, metrics);
@@ -256,7 +358,7 @@ class _LiquidAdaptiveNavShellState extends State<LiquidAdaptiveNavShell> {
 
     final platform = Theme.of(context).platform;
     final isMacOS = !kIsWeb && platform == TargetPlatform.macOS;
-    final isAndroid =
+    final useMaterialChrome =
         widget.platformStyle == FloatingNavPlatformStyle.material ||
         (widget.platformStyle == FloatingNavPlatformStyle.adaptive &&
             platform == TargetPlatform.android);
@@ -280,7 +382,7 @@ class _LiquidAdaptiveNavShellState extends State<LiquidAdaptiveNavShell> {
                         metrics.orientation == Orientation.landscape &&
                         width >= 900.0)));
 
-        if (isSidebarLayout) {
+        if (isSidebarLayout && !useMaterialChrome) {
           final activeIndex = widget.selectedIndex.clamp(
             0,
             widget.destinations.length - 1,
@@ -347,10 +449,26 @@ class _LiquidAdaptiveNavShellState extends State<LiquidAdaptiveNavShell> {
         }
 
         Widget contentChild = _buildBody(context, metrics);
-        if (duoSideStrip != null) {
+        if (!useMaterialChrome && duoSideStrip != null) {
           contentChild = duoSideStrip.wrapContentWithSafeInsets(
             context,
             child: contentChild,
+          );
+        } else if (!useMaterialChrome) {
+          contentChild = _wrapHorizontalPillInset(
+            context,
+            contentChild,
+            resolvedTheme,
+          );
+        }
+
+        if (isSidebarLayout && useMaterialChrome) {
+          return _buildMaterialRailScaffold(
+            context: context,
+            backgroundColor: bg,
+            isDark: isDark,
+            resolvedTheme: resolvedTheme,
+            body: contentChild,
           );
         }
 
@@ -359,7 +477,7 @@ class _LiquidAdaptiveNavShellState extends State<LiquidAdaptiveNavShell> {
           body: Stack(
             children: [
               Positioned.fill(child: contentChild),
-              if (!isAndroid && duoSideStrip != null)
+              if (!useMaterialChrome && duoSideStrip != null)
                 Positioned(
                   top: 0,
                   bottom: 0,
@@ -379,7 +497,7 @@ class _LiquidAdaptiveNavShellState extends State<LiquidAdaptiveNavShell> {
                     brightness: effectiveBrightness,
                   ),
                 )
-              else if (!isAndroid)
+              else if (!useMaterialChrome)
                 FloatingPillNavBar(
                   platformStyle: widget.platformStyle,
                   destinations: widget.destinations,
@@ -390,7 +508,7 @@ class _LiquidAdaptiveNavShellState extends State<LiquidAdaptiveNavShell> {
                 ),
             ],
           ),
-          bottomNavigationBar: isAndroid
+          bottomNavigationBar: useMaterialChrome
               ? FloatingPillNavBar(
                   platformStyle: widget.platformStyle,
                   destinations: widget.destinations,

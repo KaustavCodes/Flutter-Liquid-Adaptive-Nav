@@ -191,6 +191,10 @@ class LiquidGlassCapsule extends StatelessWidget {
           ),
         ];
 
+    final tintOverlay = effectiveTint == null
+        ? null
+        : _fallbackTintOverlay(effectiveTint);
+
     return Container(
       width: width,
       height: height,
@@ -209,16 +213,12 @@ class LiquidGlassCapsule extends StatelessWidget {
             sigmaX: effectiveBlur,
             sigmaY: effectiveBlur,
           ),
-          child: Container(
-            padding: padding,
+          child: DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: resolvedGradientColors,
-              ),
-              color: effectiveTint?.withValues(
-                alpha: (effectiveTint.a * 0.22).clamp(0.0, 1.0),
               ),
               borderRadius: BorderRadius.circular(cornerRadius),
               border: Border.all(
@@ -226,12 +226,33 @@ class LiquidGlassCapsule extends StatelessWidget {
                 width: effectiveBorderWidth,
               ),
             ),
-            child: child,
+            child: Stack(
+              children: [
+                if (tintOverlay != null)
+                  Positioned.fill(
+                    child: IgnorePointer(
+                      child: ColoredBox(
+                        key: const ValueKey('liquid_glass_tint_overlay'),
+                        color: tintOverlay,
+                      ),
+                    ),
+                  ),
+                Padding(padding: padding, child: child),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
+}
+
+/// Opaque tints become a light wash. Translucent tints keep the alpha the
+/// caller already chose, so `nativeGlassTintColor` stays visible on the
+/// Flutter fallback. A gradient and a `color` cannot share one [BoxDecoration].
+Color _fallbackTintOverlay(Color tint) {
+  final alpha = tint.a >= 0.999 ? 0.22 : tint.a.clamp(0.0, 1.0);
+  return tint.withValues(alpha: alpha);
 }
 
 class _NativeLiquidGlassSurface extends StatefulWidget {

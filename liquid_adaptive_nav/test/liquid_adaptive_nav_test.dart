@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:liquid_adaptive_nav/liquid_adaptive_nav.dart';
 
@@ -72,6 +73,26 @@ void main() {
         expect(mid.fontFamily, 'Courier');
       },
     );
+
+    test('equal presets compare equal and copy cleanly', () {
+      final first = LiquidAdaptiveNavTheme.light(
+        fontFamily: 'Georgia',
+        selectedColor: const Color(0xFFEA580C),
+      );
+      final second = LiquidAdaptiveNavTheme.light(
+        fontFamily: 'Georgia',
+        selectedColor: const Color(0xFFEA580C),
+      );
+
+      expect(first, second);
+      expect(first.hashCode, second.hashCode);
+      expect(first, first.copyWith());
+      expect(first, isNot(LiquidAdaptiveNavTheme.dark()));
+      expect(
+        first.horizontalContentBottomInset(EdgeInsets.zero),
+        first.horizontalPillHeight + 24,
+      );
+    });
 
     test('fromColorScheme and withOverrides cascade colors & font cleanly', () {
       final scheme = ColorScheme.fromSeed(
@@ -240,6 +261,96 @@ void main() {
         expect(find.byType(NavigationBar), findsNothing);
       },
     );
+
+    testWidgets('slides the active indicator from the leading edge in RTL', (
+      tester,
+    ) async {
+      Future<void> pumpPill(TextDirection direction, int selected) {
+        return tester.pumpWidget(
+          MaterialApp(
+            theme: ThemeData(platform: TargetPlatform.iOS),
+            home: Directionality(
+              textDirection: direction,
+              child: Scaffold(
+                body: Stack(
+                  children: [
+                    FloatingPillNavBar(
+                      destinations: const [
+                        LiquidNavDestination(
+                          label: 'One',
+                          icon: CupertinoIcons.circle,
+                        ),
+                        LiquidNavDestination(
+                          label: 'Two',
+                          icon: CupertinoIcons.square,
+                        ),
+                      ],
+                      selectedIndex: selected,
+                      onDestinationSelected: (_) {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      }
+
+      await pumpPill(TextDirection.ltr, 0);
+      final ltr = tester.widget<AnimatedPositioned>(
+        find.byKey(const ValueKey('floating_pill_active_indicator')),
+      );
+      expect(ltr.left, isNotNull);
+      expect(ltr.right, isNull);
+
+      await pumpPill(TextDirection.rtl, 0);
+      final rtlFirst = tester.widget<AnimatedPositioned>(
+        find.byKey(const ValueKey('floating_pill_active_indicator')),
+      );
+      expect(rtlFirst.left, isNull);
+      expect(rtlFirst.right, ltr.left);
+
+      await pumpPill(TextDirection.rtl, 1);
+      final rtlSecond = tester.widget<AnimatedPositioned>(
+        find.byKey(const ValueKey('floating_pill_active_indicator')),
+      );
+      expect(rtlSecond.right, greaterThan(rtlFirst.right!));
+    });
+
+    testWidgets(
+      'paints a Flutter tint overlay for opaque and translucent colors',
+      (tester) async {
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: LiquidGlassCapsule(
+              cornerRadius: 24,
+              tintColor: Color(0xFFFF3B30),
+              child: Text('Tinted'),
+            ),
+          ),
+        );
+
+        final opaque = tester.widget<ColoredBox>(
+          find.byKey(const ValueKey('liquid_glass_tint_overlay')),
+        );
+        expect(opaque.color.a, closeTo(0.22, 0.001));
+
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: LiquidGlassCapsule(
+              cornerRadius: 24,
+              tintColor: Color(0x66FF3B30),
+              child: Text('Tinted'),
+            ),
+          ),
+        );
+
+        final translucent = tester.widget<ColoredBox>(
+          find.byKey(const ValueKey('liquid_glass_tint_overlay')),
+        );
+        expect(translucent.color.a, closeTo(0x66 / 255, 0.01));
+      },
+    );
   });
 
   group('Duo Side Strip & AdaptiveLayoutMetrics', () {
@@ -309,6 +420,41 @@ void main() {
         );
       },
     );
+
+    test('hinge gaps stay zero until a hinge has thickness on that axis', () {
+      const flat = AdaptiveLayoutMetrics(
+        posture: PostureEvent(
+          foldState: FoldState.normal,
+          isSeparating: false,
+          orientation: PostureOrientation.portrait,
+        ),
+        sizeClass: WindowSizeClass.compact,
+        viewportSize: Size(390, 844),
+        orientation: Orientation.portrait,
+      );
+      expect(flat.horizontalHingeGap, 0);
+      expect(flat.verticalHingeGap, 0);
+      expect(flat.isTableTopSplit, isFalse);
+
+      const tabletop = AdaptiveLayoutMetrics(
+        posture: PostureEvent(
+          foldState: FoldState.halfOpened,
+          isSeparating: false,
+          orientation: PostureOrientation.landscape,
+          hingeBounds: PostureRect(left: 0, top: 400, width: 800, height: 16),
+          displayAreas: [
+            PostureRect(left: 0, top: 0, width: 800, height: 400),
+            PostureRect(left: 0, top: 416, width: 800, height: 400),
+          ],
+        ),
+        sizeClass: WindowSizeClass.medium,
+        viewportSize: Size(800, 816),
+        orientation: Orientation.landscape,
+      );
+      expect(tabletop.isTableTopSplit, isTrue);
+      expect(tabletop.verticalHingeGap, 16);
+      expect(tabletop.horizontalHingeGap, 48);
+    });
 
     testWidgets('DuoSideActionStrip renders actions and triggers callbacks', (
       tester,
@@ -408,13 +554,32 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.text('Page: Settings'), findsOneWidget);
 
-        // Collapse sidebar -> collapsed toolbar should appear with Show button
+        final semantics = tester.ensureSemantics();
+        String semanticsTree() {
+          SemanticsNode? root;
+          void visit(PipelineOwner owner) {
+            root ??= owner.semanticsOwner?.rootSemanticsNode;
+            if (root == null) owner.visitChildren(visit);
+          }
+
+          visit(tester.binding.rootPipelineOwner);
+          return root?.toStringDeep() ?? '';
+        }
+        expect(semanticsTree(), contains('Hide Sidebar'));
+        expect(semanticsTree(), contains('Home'));
+
+        // Collapse sidebar -> collapsed toolbar should appear with Show button.
+        // Collapsed rows stay out of the semantics tree.
         await tester.tap(find.byKey(const ValueKey('mac_hide_sidebar_button')));
         await tester.pumpAndSettle();
         expect(
           find.byKey(const ValueKey('mac_collapsed_toolbar')),
           findsOneWidget,
         );
+        final collapsedTree = semanticsTree();
+        semantics.dispose();
+        expect(collapsedTree, isNot(contains('Hide Sidebar')));
+        expect(collapsedTree, isNot(contains('Home')));
 
         // Expand back
         await tester.tap(find.byKey(const ValueKey('mac_show_sidebar_button')));
@@ -479,6 +644,104 @@ void main() {
           findsOneWidget,
         );
         expect(reportedPadding?.right, greaterThanOrEqualTo(84.0));
+      },
+    );
+
+    testWidgets(
+      'reserves bottom MediaQuery padding above the horizontal glass pill',
+      (tester) async {
+        tester.view.physicalSize = const Size(390, 844);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: ThemeData(platform: TargetPlatform.iOS),
+            home: LiquidAdaptiveNavShell(
+              destinations: _sampleDestinations,
+              selectedIndex: 0,
+              onDestinationSelected: (_) {},
+              bodyBuilder: (context, metrics) {
+                return SafeArea(
+                  child: const Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Text('clearance', key: ValueKey('pill_clearance')),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final clearance = tester.getRect(
+          find.byKey(const ValueKey('pill_clearance')),
+        );
+        final pill = tester.getRect(
+          find.byKey(const ValueKey('floating_pill_nav_horizontal')),
+        );
+        expect(clearance.bottom, lessThanOrEqualTo(pill.top + 1));
+      },
+    );
+
+    testWidgets(
+      'uses a Material rail on wide Android and keeps the sidebar for apple glass',
+      (tester) async {
+        tester.view.physicalSize = const Size(1280, 900);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: ThemeData(platform: TargetPlatform.android),
+            home: LiquidAdaptiveNavShell(
+              destinations: _sampleDestinations,
+              selectedIndex: 0,
+              onDestinationSelected: (_) {},
+              pages: [
+                for (final destination in _sampleDestinations)
+                  Text('Page: ${destination.label}'),
+              ],
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const ValueKey('material_nav_rail')), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('macos_sidebar_navigation')),
+          findsNothing,
+        );
+        expect(find.byType(NavigationBar), findsNothing);
+
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: ThemeData(platform: TargetPlatform.android),
+            home: LiquidAdaptiveNavShell(
+              platformStyle: FloatingNavPlatformStyle.appleGlass,
+              destinations: _sampleDestinations,
+              selectedIndex: 0,
+              onDestinationSelected: (_) {},
+              pages: [
+                for (final destination in _sampleDestinations)
+                  Text('Page: ${destination.label}'),
+              ],
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(
+          find.byKey(const ValueKey('macos_sidebar_navigation')),
+          findsOneWidget,
+        );
+        expect(find.byKey(const ValueKey('material_nav_rail')), findsNothing);
       },
     );
 

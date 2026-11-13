@@ -1,5 +1,5 @@
 name: liquid_adaptive_nav_example
-description: "Demonstrates liquid_adaptive_nav across iOS, iPhone Duo, macOS sidebar, Android Material NavigationBar, and Light/Dark themes."
+description: "Demonstrates liquid_adaptive_nav across iOS, iPhone Duo, macOS sidebar, Android NavigationBar/NavigationRail, and Light/Dark themes."
 publish_to: 'none'
 
 environment:
@@ -21,3 +21,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  config:
+    # The example Xcode project is already migrated to Swift Package Manager.
+    # Keep it on here so `flutter run` still generates FlutterFramework when
+    # the global `enable-swift-package-manager` config is off.
+    enable-swift-package-manager: true

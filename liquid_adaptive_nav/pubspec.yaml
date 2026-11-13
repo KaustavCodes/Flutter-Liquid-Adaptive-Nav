@@ -2,7 +2,7 @@ name: liquid_adaptive_nav
 description: >-
   Adaptive Apple Liquid Glass navigation bar, foldable & iPhone Duo vertical
   side-strip dock, collapsible macOS sidebar, and Light/Dark theming.
-version: 0.0.3
+version: 0.0.4
 homepage: https://kauscoder.com
 repository: https://github.com/KaustavCodes/Flutter-Liquid-Adaptive-Nav
 issue_tracker: https://github.com/KaustavCodes/Flutter-Liquid-Adaptive-Nav/issues
@@ -15,7 +15,7 @@ topics:
 
 environment:
   sdk: ^3.13.7
-  flutter: '>=3.3.0'
+  flutter: '>=3.29.0'
 
 dependencies:
   flutter:

@@ -102,11 +102,11 @@ class AdaptiveLayoutMetrics {
 
   Size get effectiveWindowSize => windowSize ?? viewportSize;
 
-  /// Foldable bent horizontally along landscape/portrait screen with top & bottom panes.
-  bool get isTableTopSplit =>
-      posture.isTableTop &&
-      posture.hasHinge &&
-      (posture.hingeBounds?.height ?? 0) >= 0;
+  /// Foldable bent horizontally with top and bottom panes.
+  ///
+  /// Requires a tabletop posture and a hinge with a positive size.
+  /// [PostureEvent.hasHinge] is false when bounds are missing or empty.
+  bool get isTableTopSplit => posture.isTableTop && posture.hasHinge;
 
   /// Foldable opened vertically like a book with distinct left & right regions.
   bool get isBookSplit =>
@@ -148,14 +148,19 @@ class AdaptiveLayoutMetrics {
     return viewportSize.height * 0.5;
   }
 
-  /// Hinge gap width (horizontal split) or height (vertical tabletop split).
-  double get horizontalHingeGap => posture.hasHinge
-      ? (posture.hingeBounds?.width ?? 24.0).clamp(12.0, 48.0)
-      : 24.0;
+  /// Width of a vertical book hinge. `0` when that axis has no hinge thickness.
+  double get horizontalHingeGap {
+    final width = posture.hingeBounds?.width ?? 0.0;
+    if (!posture.hasHinge || width <= 0) return 0.0;
+    return width.clamp(12.0, 48.0);
+  }
 
-  double get verticalHingeGap => posture.hasHinge
-      ? (posture.hingeBounds?.height ?? 20.0).clamp(12.0, 48.0)
-      : 20.0;
+  /// Height of a horizontal tabletop hinge. `0` when that axis has no hinge thickness.
+  double get verticalHingeGap {
+    final height = posture.hingeBounds?.height ?? 0.0;
+    if (!posture.hasHinge || height <= 0) return 0.0;
+    return height.clamp(12.0, 48.0);
+  }
 
   /// Resolves an asymmetric iOS hardware side strip (e.g. iPhone Duo camera/dock band).
   ///

@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 
 /// Controls how [FloatingPillNavBar] and [LiquidAdaptiveNavShell] style
-/// compact/mobile navigation bars.
+/// navigation chrome.
 enum FloatingNavPlatformStyle {
-  /// Renders Apple frosted/liquid-glass pills on iOS/macOS/desktop/web and a
-  /// Material 3 [NavigationBar] on Android.
+  /// Apple frosted/liquid-glass pills and the desktop sidebar on iOS, macOS,
+  /// and other non-Android targets. Android uses Material 3: a [NavigationBar]
+  /// on compact windows and a [NavigationRail] on wide windows.
   adaptive,
 
-  /// Always renders the frosted/liquid-glass pill navigation bar on every
-  /// platform, including Android.
+  /// Always renders Apple frosted/liquid-glass chrome, including on Android.
+  /// Wide windows still use the collapsible sidebar.
   appleGlass,
 
-  /// Always renders the Material 3 [NavigationBar] on horizontal layouts
-  /// (and falls back to vertical pill only when docked in an asymmetric Duo strip).
+  /// Always renders Material 3 chrome: a [NavigationBar] on compact windows
+  /// and a [NavigationRail] on wide windows.
   material,
 }
 

@@ -79,6 +79,7 @@ class LiquidSidebarToggleButton extends StatelessWidget {
 
     return LiquidTactileButton(
       tooltip: tooltip,
+      semanticLabel: tooltip,
       borderRadius: BorderRadius.circular(7),
       pressedScale: 0.94,
       onPressed: () {
@@ -180,46 +181,55 @@ class MacOSSidebarNavigation extends StatelessWidget {
         ),
       ),
       child: ClipRect(
-        child: OverflowBox(
-          alignment: Alignment.topLeft,
-          minWidth: width,
-          maxWidth: width,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (headerBuilder != null)
-                headerBuilder!(context)
-              else
-                _buildTopHeader(context, isDark, resolvedTheme),
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
-                  ),
-                  children: [
-                    for (int s = 0; s < sections.length; s++) ...[
-                      if (s > 0) const SizedBox(height: 18),
-                      if (sections[s].title != null) ...[
-                        _buildSectionHeader(sections[s].title!, resolvedTheme),
-                        const SizedBox(height: 4),
+        child: IgnorePointer(
+          ignoring: isCollapsed,
+          child: ExcludeSemantics(
+            excluding: isCollapsed,
+            child: OverflowBox(
+              alignment: Alignment.topLeft,
+              minWidth: width,
+              maxWidth: width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (headerBuilder != null)
+                    headerBuilder!(context)
+                  else
+                    _buildTopHeader(context, isDark, resolvedTheme),
+                  Expanded(
+                    child: ListView(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      children: [
+                        for (int s = 0; s < sections.length; s++) ...[
+                          if (s > 0) const SizedBox(height: 18),
+                          if (sections[s].title != null) ...[
+                            _buildSectionHeader(
+                              sections[s].title!,
+                              resolvedTheme,
+                            ),
+                            const SizedBox(height: 4),
+                          ],
+                          for (final item in sections[s].items)
+                            _buildSidebarItem(
+                              item: item,
+                              isDark: isDark,
+                              resolvedTheme: resolvedTheme,
+                            ),
+                        ],
                       ],
-                      for (final item in sections[s].items)
-                        _buildSidebarItem(
-                          item: item,
-                          isDark: isDark,
-                          resolvedTheme: resolvedTheme,
-                        ),
-                    ],
-                  ],
-                ),
+                    ),
+                  ),
+                  if (footer != null)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
+                      child: footer!,
+                    ),
+                ],
               ),
-              if (footer != null)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
-                  child: footer!,
-                ),
-            ],
+            ),
           ),
         ),
       ),

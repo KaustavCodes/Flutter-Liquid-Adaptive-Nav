@@ -39,6 +39,24 @@ enum _DemoFontChoice {
   const _DemoFontChoice(this.label, this.family);
 }
 
+enum _PreviewPlatform {
+  host('Host'),
+  iOS('iOS'),
+  android('Android'),
+  macOS('macOS');
+
+  final String label;
+
+  const _PreviewPlatform(this.label);
+
+  TargetPlatform? get platform => switch (this) {
+    _PreviewPlatform.host => null,
+    _PreviewPlatform.iOS => TargetPlatform.iOS,
+    _PreviewPlatform.android => TargetPlatform.android,
+    _PreviewPlatform.macOS => TargetPlatform.macOS,
+  };
+}
+
 class _LiquidAdaptiveNavExampleAppState
     extends State<LiquidAdaptiveNavExampleApp> {
   ThemeMode _themeMode = ThemeMode.system;
@@ -48,6 +66,8 @@ class _LiquidAdaptiveNavExampleAppState
   bool _enableNativeGlass = true;
   bool _tintNativeGlass = false;
   bool _simulateDuoStrip = false;
+  bool _useRtl = false;
+  _PreviewPlatform _previewPlatform = _PreviewPlatform.host;
   double _blurSigma = 28.0;
   double _labelSizeOffset = 0.0;
 
@@ -66,7 +86,7 @@ class _LiquidAdaptiveNavExampleAppState
             enableNativeGlass: _enableNativeGlass,
             blurSigma: _blurSigma,
             nativeGlassTintColor: _tintNativeGlass
-                ? selected.withValues(alpha: 0.18)
+                ? selected.withValues(alpha: 0.35)
                 : null,
           )
         : LiquidAdaptiveNavTheme.light(
@@ -77,7 +97,7 @@ class _LiquidAdaptiveNavExampleAppState
             enableNativeGlass: _enableNativeGlass,
             blurSigma: _blurSigma,
             nativeGlassTintColor: _tintNativeGlass
-                ? selected.withValues(alpha: 0.14)
+                ? selected.withValues(alpha: 0.35)
                 : null,
           );
 
@@ -117,6 +137,20 @@ class _LiquidAdaptiveNavExampleAppState
       debugShowCheckedModeBanner: false,
       title: 'liquid_adaptive_nav Demo',
       themeMode: _themeMode,
+      builder: (context, child) {
+        final preview = _previewPlatform.platform;
+        Widget result = child ?? const SizedBox.shrink();
+        if (preview != null) {
+          result = Theme(
+            data: Theme.of(context).copyWith(platform: preview),
+            child: result,
+          );
+        }
+        return Directionality(
+          textDirection: _useRtl ? TextDirection.rtl : TextDirection.ltr,
+          child: result,
+        );
+      },
       theme: ThemeData(
         brightness: Brightness.light,
         colorSchemeSeed: _preset.lightSelected,
@@ -141,6 +175,8 @@ class _LiquidAdaptiveNavExampleAppState
               enableNativeGlass: _enableNativeGlass,
               tintNativeGlass: _tintNativeGlass,
               simulateDuoStrip: _simulateDuoStrip,
+              useRtl: _useRtl,
+              previewPlatform: _previewPlatform,
               blurSigma: _blurSigma,
               labelSizeOffset: _labelSizeOffset,
               onThemeModeChanged: (m) => setState(() => _themeMode = m),
@@ -150,8 +186,13 @@ class _LiquidAdaptiveNavExampleAppState
               onNativeGlassChanged: (v) =>
                   setState(() => _enableNativeGlass = v),
               onTintGlassChanged: (v) => setState(() => _tintNativeGlass = v),
-              onSimulateDuoChanged: (v) =>
-                  setState(() => _simulateDuoStrip = v),
+              onSimulateDuoChanged: (v) => setState(() {
+                _simulateDuoStrip = v;
+                if (v) _previewPlatform = _PreviewPlatform.iOS;
+              }),
+              onUseRtlChanged: (v) => setState(() => _useRtl = v),
+              onPreviewPlatformChanged: (p) =>
+                  setState(() => _previewPlatform = p),
               onBlurChanged: (v) => setState(() => _blurSigma = v),
               onLabelSizeOffsetChanged: (v) =>
                   setState(() => _labelSizeOffset = v),
@@ -171,6 +212,8 @@ class _DemoHomeShell extends StatefulWidget {
   final bool enableNativeGlass;
   final bool tintNativeGlass;
   final bool simulateDuoStrip;
+  final bool useRtl;
+  final _PreviewPlatform previewPlatform;
   final double blurSigma;
   final double labelSizeOffset;
   final ValueChanged<ThemeMode> onThemeModeChanged;
@@ -180,6 +223,8 @@ class _DemoHomeShell extends StatefulWidget {
   final ValueChanged<bool> onNativeGlassChanged;
   final ValueChanged<bool> onTintGlassChanged;
   final ValueChanged<bool> onSimulateDuoChanged;
+  final ValueChanged<bool> onUseRtlChanged;
+  final ValueChanged<_PreviewPlatform> onPreviewPlatformChanged;
   final ValueChanged<double> onBlurChanged;
   final ValueChanged<double> onLabelSizeOffsetChanged;
 
@@ -191,6 +236,8 @@ class _DemoHomeShell extends StatefulWidget {
     required this.enableNativeGlass,
     required this.tintNativeGlass,
     required this.simulateDuoStrip,
+    required this.useRtl,
+    required this.previewPlatform,
     required this.blurSigma,
     required this.labelSizeOffset,
     required this.onThemeModeChanged,
@@ -200,6 +247,8 @@ class _DemoHomeShell extends StatefulWidget {
     required this.onNativeGlassChanged,
     required this.onTintGlassChanged,
     required this.onSimulateDuoChanged,
+    required this.onUseRtlChanged,
+    required this.onPreviewPlatformChanged,
     required this.onBlurChanged,
     required this.onLabelSizeOffsetChanged,
   });
@@ -358,7 +407,7 @@ class _DemoHomeShellState extends State<_DemoHomeShell> {
           child: CustomScrollView(
             slivers: [
               SliverPadding(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 120),
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
                 sliver: SliverList.list(
                   children: [
                     _HeaderCard(
@@ -376,6 +425,8 @@ class _DemoHomeShellState extends State<_DemoHomeShell> {
                       enableNativeGlass: widget.enableNativeGlass,
                       tintNativeGlass: widget.tintNativeGlass,
                       simulateDuoStrip: widget.simulateDuoStrip,
+                      useRtl: widget.useRtl,
+                      previewPlatform: widget.previewPlatform,
                       blurSigma: widget.blurSigma,
                       labelSizeOffset: widget.labelSizeOffset,
                       onThemeModeChanged: widget.onThemeModeChanged,
@@ -385,6 +436,8 @@ class _DemoHomeShellState extends State<_DemoHomeShell> {
                       onNativeGlassChanged: widget.onNativeGlassChanged,
                       onTintGlassChanged: widget.onTintGlassChanged,
                       onSimulateDuoChanged: widget.onSimulateDuoChanged,
+                      onUseRtlChanged: widget.onUseRtlChanged,
+                      onPreviewPlatformChanged: widget.onPreviewPlatformChanged,
                       onBlurChanged: widget.onBlurChanged,
                       onLabelSizeOffsetChanged: widget.onLabelSizeOffsetChanged,
                     ),
@@ -395,7 +448,10 @@ class _DemoHomeShellState extends State<_DemoHomeShell> {
                       fontFamily: widget.fontChoice.family,
                       blurSigma: widget.blurSigma,
                       enableNativeGlass: widget.enableNativeGlass,
+                      tintNativeGlass: widget.tintNativeGlass,
                     ),
+                    const SizedBox(height: 16),
+                    const _BottomClearanceCard(),
                   ],
                 ),
               ),
@@ -460,6 +516,14 @@ class _HeaderCard extends StatelessWidget {
                         '${duoStrip != null ? ' • Duo Strip (${duoStrip.edge.name} ${duoStrip.width.toStringAsFixed(0)}dp)' : ''}',
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${Theme.of(context).platform.name} • '
+                        '${Directionality.of(context).name} • '
+                        'bottom inset ${MediaQuery.paddingOf(context).bottom.toStringAsFixed(0)} • '
+                        'hinge ${metrics.horizontalHingeGap.toStringAsFixed(0)}×${metrics.verticalHingeGap.toStringAsFixed(0)}',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                     ],
                   ),
                 ),
@@ -486,6 +550,8 @@ class _AppearanceControlsCard extends StatelessWidget {
   final bool enableNativeGlass;
   final bool tintNativeGlass;
   final bool simulateDuoStrip;
+  final bool useRtl;
+  final _PreviewPlatform previewPlatform;
   final double blurSigma;
   final double labelSizeOffset;
   final ValueChanged<ThemeMode> onThemeModeChanged;
@@ -495,6 +561,8 @@ class _AppearanceControlsCard extends StatelessWidget {
   final ValueChanged<bool> onNativeGlassChanged;
   final ValueChanged<bool> onTintGlassChanged;
   final ValueChanged<bool> onSimulateDuoChanged;
+  final ValueChanged<bool> onUseRtlChanged;
+  final ValueChanged<_PreviewPlatform> onPreviewPlatformChanged;
   final ValueChanged<double> onBlurChanged;
   final ValueChanged<double> onLabelSizeOffsetChanged;
 
@@ -506,6 +574,8 @@ class _AppearanceControlsCard extends StatelessWidget {
     required this.enableNativeGlass,
     required this.tintNativeGlass,
     required this.simulateDuoStrip,
+    required this.useRtl,
+    required this.previewPlatform,
     required this.blurSigma,
     required this.labelSizeOffset,
     required this.onThemeModeChanged,
@@ -515,6 +585,8 @@ class _AppearanceControlsCard extends StatelessWidget {
     required this.onNativeGlassChanged,
     required this.onTintGlassChanged,
     required this.onSimulateDuoChanged,
+    required this.onUseRtlChanged,
+    required this.onPreviewPlatformChanged,
     required this.onBlurChanged,
     required this.onLabelSizeOffsetChanged,
   });
@@ -596,9 +668,29 @@ class _AppearanceControlsCard extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             Text(
-              'Bar Style (Android / Apple)',
+              'Preview platform',
               style: Theme.of(context).textTheme.labelMedium,
             ),
+            const SizedBox(height: 4),
+            Text(
+              'Host follows this device. iOS shows the glass pill, Duo strip, or sidebar. Android shows a NavigationBar, or a NavigationRail when the window is wide.',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: 6),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final item in _PreviewPlatform.values)
+                  ChoiceChip(
+                    label: Text(item.label),
+                    selected: previewPlatform == item,
+                    onSelected: (_) => onPreviewPlatformChanged(item),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            Text('Bar style', style: Theme.of(context).textTheme.labelMedium),
             const SizedBox(height: 6),
             SegmentedButton<FloatingNavPlatformStyle>(
               segments: const [
@@ -649,17 +741,58 @@ class _AppearanceControlsCard extends StatelessWidget {
             ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('Tint Native Glass Capsule'),
+              title: const Text('Tint glass capsule'),
+              subtitle: const Text(
+                'Colors the native iOS glass and the Flutter blur fallback.',
+              ),
               value: tintNativeGlass,
               onChanged: onTintGlassChanged,
             ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('Simulate iPhone Duo Side Strip (iOS)'),
+              title: const Text('Right-to-left layout'),
+              subtitle: const Text(
+                'The pill indicator should follow the first destination.',
+              ),
+              value: useRtl,
+              onChanged: onUseRtlChanged,
+            ),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Simulate iPhone Duo side strip'),
+              subtitle: const Text(
+                'Switches the preview platform to iOS and docks a vertical pill.',
+              ),
               value: simulateDuoStrip,
               onChanged: onSimulateDuoChanged,
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _BottomClearanceCard extends StatelessWidget {
+  const _BottomClearanceCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final bottom = MediaQuery.paddingOf(context).bottom;
+    final cs = Theme.of(context).colorScheme;
+    return Card(
+      elevation: 0,
+      color: cs.primaryContainer,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Text(
+          'End of page. This card should sit fully above the floating pill. '
+          'Bottom MediaQuery padding is ${bottom.toStringAsFixed(0)} dp.',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: cs.onPrimaryContainer,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     );
@@ -672,6 +805,7 @@ class _StandaloneCapsulePreview extends StatelessWidget {
   final String? fontFamily;
   final double blurSigma;
   final bool enableNativeGlass;
+  final bool tintNativeGlass;
 
   const _StandaloneCapsulePreview({
     required this.accentColor,
@@ -679,6 +813,7 @@ class _StandaloneCapsulePreview extends StatelessWidget {
     required this.fontFamily,
     required this.blurSigma,
     required this.enableNativeGlass,
+    required this.tintNativeGlass,
   });
 
   @override
@@ -701,6 +836,9 @@ class _StandaloneCapsulePreview extends StatelessWidget {
           isDark: isDark,
           blurSigma: blurSigma,
           enableNativeGlass: enableNativeGlass,
+          tintColor: tintNativeGlass
+              ? accentColor.withValues(alpha: 0.45)
+              : null,
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
           child: Row(
             mainAxisSize: MainAxisSize.min,

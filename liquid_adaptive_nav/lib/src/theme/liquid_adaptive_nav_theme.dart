@@ -1,6 +1,7 @@
 import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -477,6 +478,28 @@ class LiquidAdaptiveNavTheme extends ThemeExtension<LiquidAdaptiveNavTheme> {
     }
   }
 
+  /// Margin around the horizontal floating pill.
+  ///
+  /// When [horizontalPillMargin] is null, the bottom margin clears the system
+  /// inset and leaves a small gap above the home indicator.
+  EdgeInsets resolveHorizontalPillMargin(EdgeInsets mediaPadding) {
+    return horizontalPillMargin ??
+        EdgeInsets.only(
+          left: 20,
+          right: 20,
+          bottom: mediaPadding.bottom > 0 ? mediaPadding.bottom + 8 : 24,
+        );
+  }
+
+  /// Bottom [MediaQuery] inset that keeps content clear of the horizontal pill.
+  ///
+  /// Includes the pill height and the bottom margin from
+  /// [resolveHorizontalPillMargin].
+  double horizontalContentBottomInset(EdgeInsets mediaPadding) {
+    final margin = resolveHorizontalPillMargin(mediaPadding);
+    return margin.bottom + horizontalPillHeight;
+  }
+
   /// Applies nullable inline widget overrides cleanly onto a resolved theme
   /// without resetting unrelated theme defaults like [enableNativeGlass],
   /// [blurSigma], or [enableHaptics].
@@ -868,6 +891,153 @@ class LiquidAdaptiveNavTheme extends ThemeExtension<LiquidAdaptiveNavTheme> {
           color: custom.color ?? fallbackColor,
         );
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is LiquidAdaptiveNavTheme &&
+        runtimeType == other.runtimeType &&
+        fontFamily == other.fontFamily &&
+        labelTextStyle == other.labelTextStyle &&
+        selectedLabelTextStyle == other.selectedLabelTextStyle &&
+        verticalLabelTextStyle == other.verticalLabelTextStyle &&
+        selectedVerticalLabelTextStyle ==
+            other.selectedVerticalLabelTextStyle &&
+        actionStripLabelTextStyle == other.actionStripLabelTextStyle &&
+        sidebarItemTextStyle == other.sidebarItemTextStyle &&
+        selectedSidebarItemTextStyle == other.selectedSidebarItemTextStyle &&
+        sidebarSectionHeaderTextStyle == other.sidebarSectionHeaderTextStyle &&
+        sidebarTitleTextStyle == other.sidebarTitleTextStyle &&
+        collapsedToolbarTitleTextStyle ==
+            other.collapsedToolbarTitleTextStyle &&
+        selectedColor == other.selectedColor &&
+        unselectedColor == other.unselectedColor &&
+        selectedIconColor == other.selectedIconColor &&
+        unselectedIconColor == other.unselectedIconColor &&
+        selectedLabelColor == other.selectedLabelColor &&
+        unselectedLabelColor == other.unselectedLabelColor &&
+        activeIndicatorColor == other.activeIndicatorColor &&
+        activeIndicatorGradient == other.activeIndicatorGradient &&
+        activeIndicatorBorderRadius == other.activeIndicatorBorderRadius &&
+        androidBarBackgroundColor == other.androidBarBackgroundColor &&
+        androidIndicatorColor == other.androidIndicatorColor &&
+        androidSelectedIconColor == other.androidSelectedIconColor &&
+        androidUnselectedIconColor == other.androidUnselectedIconColor &&
+        androidSelectedLabelColor == other.androidSelectedLabelColor &&
+        androidUnselectedLabelColor == other.androidUnselectedLabelColor &&
+        androidElevation == other.androidElevation &&
+        enableNativeGlass == other.enableNativeGlass &&
+        blurSigma == other.blurSigma &&
+        listEquals(glassGradientColors, other.glassGradientColors) &&
+        glassBorderColor == other.glassBorderColor &&
+        glassBorderWidth == other.glassBorderWidth &&
+        glassHairlineBorderColor == other.glassHairlineBorderColor &&
+        listEquals(glassShadows, other.glassShadows) &&
+        nativeGlassTintColor == other.nativeGlassTintColor &&
+        actionStripIconColor == other.actionStripIconColor &&
+        actionStripLabelColor == other.actionStripLabelColor &&
+        actionStripDividerColor == other.actionStripDividerColor &&
+        sidebarWidth == other.sidebarWidth &&
+        sidebarBackgroundColor == other.sidebarBackgroundColor &&
+        sidebarDividerColor == other.sidebarDividerColor &&
+        sidebarSelectedColor == other.sidebarSelectedColor &&
+        sidebarSelectedGradient == other.sidebarSelectedGradient &&
+        sidebarSelectedForegroundColor ==
+            other.sidebarSelectedForegroundColor &&
+        sidebarSelectedIconColor == other.sidebarSelectedIconColor &&
+        sidebarUnselectedIconColor == other.sidebarUnselectedIconColor &&
+        sidebarUnselectedTextColor == other.sidebarUnselectedTextColor &&
+        sidebarSectionHeaderColor == other.sidebarSectionHeaderColor &&
+        sidebarSelectedBorderColor == other.sidebarSelectedBorderColor &&
+        sidebarSelectedShadowColor == other.sidebarSelectedShadowColor &&
+        listEquals(
+          sidebarToggleButtonColors,
+          other.sidebarToggleButtonColors,
+        ) &&
+        sidebarToggleBorderColor == other.sidebarToggleBorderColor &&
+        sidebarToggleIconColor == other.sidebarToggleIconColor &&
+        collapsedToolbarHeight == other.collapsedToolbarHeight &&
+        collapsedToolbarBackgroundColor ==
+            other.collapsedToolbarBackgroundColor &&
+        collapsedToolbarDividerColor == other.collapsedToolbarDividerColor &&
+        collapsedToolbarTitleColor == other.collapsedToolbarTitleColor &&
+        scaffoldBackgroundColor == other.scaffoldBackgroundColor &&
+        horizontalPillHeight == other.horizontalPillHeight &&
+        horizontalPillMaxWidth == other.horizontalPillMaxWidth &&
+        horizontalPillCornerRadius == other.horizontalPillCornerRadius &&
+        horizontalPillMargin == other.horizontalPillMargin &&
+        enableHaptics == other.enableHaptics &&
+        onInteractionFeedback == other.onInteractionFeedback;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    runtimeType,
+    fontFamily,
+    labelTextStyle,
+    selectedLabelTextStyle,
+    verticalLabelTextStyle,
+    selectedVerticalLabelTextStyle,
+    actionStripLabelTextStyle,
+    sidebarItemTextStyle,
+    selectedSidebarItemTextStyle,
+    sidebarSectionHeaderTextStyle,
+    sidebarTitleTextStyle,
+    collapsedToolbarTitleTextStyle,
+    selectedColor,
+    unselectedColor,
+    selectedIconColor,
+    unselectedIconColor,
+    selectedLabelColor,
+    unselectedLabelColor,
+    activeIndicatorColor,
+    activeIndicatorGradient,
+    activeIndicatorBorderRadius,
+    androidBarBackgroundColor,
+    androidIndicatorColor,
+    androidSelectedIconColor,
+    androidUnselectedIconColor,
+    androidSelectedLabelColor,
+    androidUnselectedLabelColor,
+    androidElevation,
+    enableNativeGlass,
+    blurSigma,
+    Object.hashAll(glassGradientColors ?? const <Color>[]),
+    glassBorderColor,
+    glassBorderWidth,
+    glassHairlineBorderColor,
+    Object.hashAll(glassShadows ?? const <BoxShadow>[]),
+    nativeGlassTintColor,
+    actionStripIconColor,
+    actionStripLabelColor,
+    actionStripDividerColor,
+    sidebarWidth,
+    sidebarBackgroundColor,
+    sidebarDividerColor,
+    sidebarSelectedColor,
+    sidebarSelectedGradient,
+    sidebarSelectedForegroundColor,
+    sidebarSelectedIconColor,
+    sidebarUnselectedIconColor,
+    sidebarUnselectedTextColor,
+    sidebarSectionHeaderColor,
+    sidebarSelectedBorderColor,
+    sidebarSelectedShadowColor,
+    Object.hashAll(sidebarToggleButtonColors ?? const <Color>[]),
+    sidebarToggleBorderColor,
+    sidebarToggleIconColor,
+    collapsedToolbarHeight,
+    collapsedToolbarBackgroundColor,
+    collapsedToolbarDividerColor,
+    collapsedToolbarTitleColor,
+    scaffoldBackgroundColor,
+    horizontalPillHeight,
+    horizontalPillMaxWidth,
+    horizontalPillCornerRadius,
+    horizontalPillMargin,
+    enableHaptics,
+    onInteractionFeedback,
+  ]);
 
   @override
   LiquidAdaptiveNavTheme copyWith({

@@ -1,3 +1,14 @@
+## 0.0.4
+
+* Wide Android windows and `FloatingNavPlatformStyle.material` now use a Material 3 `NavigationRail`. Compact windows still use `NavigationBar`. `appleGlass` keeps the frosted pill and the desktop sidebar.
+* Horizontal glass pills expand the content `MediaQuery` bottom padding so `SafeArea` and list padding clear the bar.
+* The active pill indicator follows right-to-left layouts.
+* The Flutter `BackdropFilter` capsule honors `tintColor`. Opaque tints are drawn as a light wash. Translucent tints keep their alpha.
+* `LiquidAdaptiveNavTheme` implements `==` and `hashCode`.
+* A collapsed sidebar ignores pointers and drops its semantics.
+* Hinge gap helpers return `0` when that axis has no hinge thickness.
+* The example can preview iOS, Android, and macOS chrome, right-to-left layout, glass tint, and bottom clearance.
+
 ## 0.0.3
 
 * Updated `display_posture_detector` dependency to `^0.0.5`.

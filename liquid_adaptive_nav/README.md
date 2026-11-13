@@ -13,7 +13,7 @@ Adaptive Apple **Liquid Glass** navigation bars, foldable & iPhone Duo vertical 
   - **iOS / macOS Compact**: Floating frosted glass pill (`FloatingPillNavBar`) with sliding active indicator.
   - **Foldable / iPhone Duo Side Strip**: Docks vertically along the asymmetric hardware strip edge while keeping hardware camera/status regions clear and expanding `MediaQuery` safe insets for content automatically.
   - **macOS / Desktop / Landscape Tablet**: Collapsible sectioned sidebar (`MacOSSidebarNavigation`) with custom brand header, footer, and animated collapsed toolbar.
-  - **Android**: Material 3 `NavigationBar` by default (`FloatingNavPlatformStyle.adaptive`) — or opt into frosted glass anywhere with `FloatingNavPlatformStyle.appleGlass`.
+  - **Android**: Material 3 `NavigationBar` on compact windows and `NavigationRail` on wide windows (`FloatingNavPlatformStyle.adaptive`). Opt into frosted glass, including the desktop sidebar on wide windows, with `FloatingNavPlatformStyle.appleGlass`.
 - **Pushed Screen Action Strip (`DuoSideActionStrip` & `LiquidDuoPageContainer`)**: Vertical frosted action capsule (Back, Edit, Delete, etc.) docked cleanly on asymmetric Duo strips.
 - **Full Light/Dark & Typography Theming (`LiquidAdaptiveNavTheme`)**:
   - `LiquidAdaptiveNavTheme.light(...)`, `.dark(...)`, `.fromColorScheme(...)`, and `.adaptive(...)`
@@ -26,7 +26,7 @@ Adaptive Apple **Liquid Glass** navigation bars, foldable & iPhone Duo vertical 
 | --- | --- | --- |
 | **iOS** | Floating Pill + Asymmetric Duo Vertical Strip + `DuoSideActionStrip` | Native `UIGlassEffect` (iOS 26+) -> `UIBlurEffect` (< iOS 26) |
 | **macOS** | Collapsible Sectioned Sidebar + Collapsed Toolbar (Floating Pill when compact) | `BackdropFilter` Frosted Capsule |
-| **Android** | Material 3 `NavigationBar` (or optional `appleGlass` Pill) + Foldable Posture Support | Material 3 / `BackdropFilter` |
+| **Android** | Compact `NavigationBar`, wide `NavigationRail` (or optional `appleGlass` pill and sidebar) + foldable posture metrics | Material 3 / `BackdropFilter` |
 
 ## Installation
 
@@ -34,7 +34,7 @@ Add `liquid_adaptive_nav` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  liquid_adaptive_nav: ^0.0.3
+  liquid_adaptive_nav: ^0.0.4
 ```
 
 ## Quick Start

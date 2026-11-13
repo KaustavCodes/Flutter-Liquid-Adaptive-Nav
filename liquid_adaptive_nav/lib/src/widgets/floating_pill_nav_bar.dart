@@ -120,14 +120,10 @@ class FloatingPillNavBar extends StatelessWidget {
     LiquidAdaptiveNavTheme resolvedTheme,
   ) {
     final activeIndex = selectedIndex.clamp(0, destinations.length - 1);
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
-    final margin =
-        resolvedTheme.horizontalPillMargin ??
-        EdgeInsets.only(
-          left: 20,
-          right: 20,
-          bottom: bottomPadding > 0 ? bottomPadding + 8 : 24,
-        );
+    final margin = resolvedTheme.resolveHorizontalPillMargin(
+      MediaQuery.of(context).padding,
+    );
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     final activeFill =
         resolvedTheme.activeIndicatorColor ??
@@ -163,12 +159,15 @@ class FloatingPillNavBar extends StatelessWidget {
             builder: (context, constraints) {
               final itemWidth = constraints.maxWidth / destinations.length;
 
+              final indicatorInset = activeIndex * itemWidth + 2;
               return Stack(
                 children: [
                   AnimatedPositioned(
+                    key: const ValueKey('floating_pill_active_indicator'),
                     duration: const Duration(milliseconds: 220),
                     curve: Curves.easeOutCubic,
-                    left: activeIndex * itemWidth + 2,
+                    left: isRtl ? null : indicatorInset,
+                    right: isRtl ? indicatorInset : null,
                     top: 2,
                     bottom: 2,
                     width: math.max(0.0, itemWidth - 4),
