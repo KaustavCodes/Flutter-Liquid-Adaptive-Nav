@@ -34,14 +34,14 @@ Add `liquid_adaptive_nav` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  liquid_adaptive_nav: ^0.0.4
+  liquid_adaptive_nav: ^0.0.5
 ```
 
 ## Quick Start
 
 ```dart
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:liquid_adaptive_nav/liquid_adaptive_nav.dart';
 
 class MyApp extends StatelessWidget {

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Returns `true` when [Theme.of(context).platform] targets Apple hardware
 /// (`iOS` or `macOS`).

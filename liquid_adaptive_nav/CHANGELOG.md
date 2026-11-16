@@ -1,3 +1,9 @@
+## 0.0.5
+
+* Replaced Flutter Material imports with `material_ui` (`^1.11.0`).
+* Updated `display_posture_detector` to `^0.0.6`.
+* Synchronized `0.0.5` version metadata across iOS/macOS podspecs and `README.md`.
+
 ## 0.0.4
 
 * Wide Android windows and `FloatingNavPlatformStyle.material` now use a Material 3 `NavigationRail`. Compact windows still use `NavigationBar`. `appleGlass` keeps the frosted pill and the desktop sidebar.

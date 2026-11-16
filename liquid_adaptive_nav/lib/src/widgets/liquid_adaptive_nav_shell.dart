@@ -1,6 +1,6 @@
 import 'package:display_posture_detector/display_posture_detector.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../models/nav_models.dart';
 import '../posture/responsive_posture_builder.dart';
