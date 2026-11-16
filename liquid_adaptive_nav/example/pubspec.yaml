@@ -8,6 +8,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  material_ui: ^1.11.0
+  cupertino_ui: ^1.1.5
   liquid_adaptive_nav:
     path: ../
   cupertino_icons: ^1.0.8

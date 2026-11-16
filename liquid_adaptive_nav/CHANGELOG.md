@@ -1,3 +1,8 @@
+## 0.0.6
+
+* Migrated Cupertino imports to `package:cupertino_ui/cupertino_ui.dart` (`cupertino_ui: ^1.1.5`).
+* Synchronized `0.0.6` version metadata across iOS/macOS podspecs and `README.md`.
+
 ## 0.0.5
 
 * Replaced Flutter Material imports with `material_ui` (`^1.11.0`).

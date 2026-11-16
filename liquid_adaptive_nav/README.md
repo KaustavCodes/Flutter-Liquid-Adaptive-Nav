@@ -34,13 +34,13 @@ Add `liquid_adaptive_nav` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  liquid_adaptive_nav: ^0.0.5
+  liquid_adaptive_nav: ^0.0.6
 ```
 
 ## Quick Start
 
 ```dart
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:liquid_adaptive_nav/liquid_adaptive_nav.dart';
 
